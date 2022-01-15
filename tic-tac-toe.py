@@ -10,7 +10,7 @@ player_1 = "x"
 player_2 = "o"
 draw = "Draw!"
 
-#Setting the default first player turn.
+#Setting the players turn.
 #None selected because it'll be according to the user's choice.
 turn = None
 
@@ -18,12 +18,9 @@ turn = None
 def main():
 
     global turn
-    
-    game_run = True
 
+    #Variable that checks for winner or tie
     winner = False
-
-    draw = False
 
     print("Welcome to the tick-tac-toe game!")
 
@@ -36,14 +33,16 @@ def main():
         print("Player 2 is going with the 'x'.")
         turn = player_2
 
+    #First display of the game board to start the game
     display_board(board)
 
+    #Game loop while there is no winner nor it's a tie
     while not winner:
         winner = game()
 
-        if winner.lower() == "draw!":
+        if winner == "Tie!":
+            print(winner)
             print("Good game. Thanks for playing!")
-
 
 #Function to run the game
 def game():
@@ -54,16 +53,29 @@ def game():
 
     winner = None
 
+    #Display player turn and let him choose
+    # a spot on the board
     choice = display_turn()
+
+    #Set his mark on the board spot he chose
     set_mark(choice)
+
+    #Display the updated board
     display_board(board)
+
+    #Check if there is a winner already
     winner = check_winner()
-    draw = check_draw()
+
+    #Check if it is a tie already
+    draw = check_tie()
+
+    #If there is not a winner nor it is a tie,
+    #Switch players' turn
     switch_turn()
 
     if winner:
         return winner
-    else:
+    elif draw:
         return draw
 
 #Setting the function to display the game board
@@ -73,12 +85,16 @@ def display_board(board):
     This function displays the game board
     """
 
+    #First line of the board
     print(f"{board[0]}|{board[1]}|{board[2]}")
     print("-+-+-")
+
+    #Second line of the board
     print(f"{board[3]}|{board[4]}|{board[5]}")
     print("-+-+-")
-    print(f"{board[6]}|{board[7]}|{board[8]}")
 
+    #Third line of the board
+    print(f"{board[6]}|{board[7]}|{board[8]}")
 
 #Creating the function to display players' turn
 def display_turn():
@@ -89,6 +105,8 @@ def display_turn():
     and return the choice.
 
     Turn = Current player
+
+    return: player's choice of the spot to put his mark
     """
 
     global turn
@@ -103,28 +121,29 @@ def display_turn():
 
     return choice
 
-
 #Creating the function that will update the game board
-#with the players location choice
+#with the players' location choice
 def set_mark(choice):
 
     """
     This function set the mark of the player
     in the location he chose on the game board
+
+    Return: Nothing. This function's function is to update the
+    game board with the player's choice.
     """
     
     global turn
     global board
 
+    #Check each spot on the board, if the spot equals the player choice,
+    #update with his mark
     for i in board:
         if i == choice and turn == player_1:   
             board[i-1] = turn
-            
-            playing = True
 
         elif i == choice and turn == player_2:   
             board[i-1] = turn
-
 
 #Creating the function to switch turns between players
 def switch_turn():
@@ -132,10 +151,13 @@ def switch_turn():
     """
     This function switches the turn
     between players
+
+    return which player it will be the turn
     """
 
     global turn
 
+    #Takes the turn variable and replaces it with the next player
     if turn == player_1:
         turn = player_2
 
@@ -144,12 +166,13 @@ def switch_turn():
 
     return turn
 
-
 #Creating a function to check the winner
 def check_winner():
     
     """
     This function checks for the winner
+
+    Return true if there is a winner
     """
 
     global board
@@ -184,17 +207,28 @@ def check_winner():
         print("Good game. Thanks for playing!")
         return True
 
-#Creating a function to check if it is a draw
-def check_draw():
+#Creating a function to check if it is tie
+def check_tie():
 
     """
-    This function checks if the game is draw
+    This function checks if it is a tie
+
+    return: "Tie!"
     """
 
+    global board
+
+    empty_spaces = 0
+    tie = "Tie!"
+
+    #Check if there is still numbers in the board, which means it is an empty space. 
     for i in board:
-        if i != range(1, 9):
-            draw 
-            return "Draw!"
+        if i in range(1, len(board)):
+            empty_spaces += 1
+    
+    if empty_spaces == 0:
+        return tie
+
 
 if __name__ == "__main__":
     main()
